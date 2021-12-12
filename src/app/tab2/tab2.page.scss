@@ -1,0 +1,20 @@
+progress::-webkit-progress-value {
+    -webkit-appearance: none;
+    //background: linear-gradient(red, darkred);
+    box-shadow: 0 10px 5px lightgreen inset;
+    background-image: black;
+    background-color: yellow;
+}
+
+progress {
+    appearance: none;
+    color: linear-gradient(red, darkred);
+
+    //box-shadow: 0 2px 5px grey inset;
+}
+.wrapbar {
+    border: green solid 5px;
+    width: 250px;
+    height: 250px;
+    background-color: yellow;
+}

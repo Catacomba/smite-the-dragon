@@ -1,0 +1,92 @@
+.testBorder{
+    border: 3px solid green;
+}
+
+progress::-moz-progress-bar { 
+  -moz-appearance: none;
+  background: linear-gradient(red, darkred);
+  //box-shadow: 0 2px 5px grey inset;
+}
+
+progress::-webkit-progress-value { 
+  -webkit-appearance: none;
+  
+  background: linear-gradient(red, darkred);
+  box-shadow: 0 2px 5px black inset;
+  color: green !important;
+}
+
+progress::-webkit-progress-bar {
+  background: black;
+}
+
+progress { 
+  appearance: none;
+  color: linear-gradient(red, darkred);
+  //box-shadow: 0 2px 5px grey inset;
+}
+
+.healthbar-border-wrap {
+  position: relative;
+  border-radius: 2px;
+  width: 70%;
+  height: 40px;
+  background: linear-gradient(to right, #75591F 0%, #BCB183 33%, #75591F  100%);
+  padding: 3px;
+}
+
+.barOverlay {
+  position: absolute;
+  top: 3px;
+  background: 
+    linear-gradient(90deg, 
+      rgba(0,0,0,1) 0%, 
+      rgba(0,0,0,0) 0.5%,
+
+      rgba(0,0,0,0) 9.5%,
+      rgba(0,0,0,1) 10%,
+      rgba(0,0,0,0) 10.5%,
+
+      rgba(0,0,0,0) 19.5%,
+      rgba(0,0,0,1) 20%,
+      rgba(0,0,0,0) 20.5%,
+
+      rgba(0,0,0,0) 29.5%,
+      rgba(0,0,0,1) 30%,
+      rgba(0,0,0,0) 30.5%,
+
+      rgba(0,0,0,0) 39.5%,
+      rgba(0,0,0,1) 40%,
+      rgba(0,0,0,0) 40.5%,
+
+      rgba(0,0,0,0) 49.5%,
+      rgba(0,0,0,1) 50%,
+      rgba(0,0,0,0) 50.5%,
+
+      rgba(0,0,0,0) 59.5%,
+      rgba(0,0,0,1) 60%,
+      rgba(0,0,0,0) 60.5%,
+
+      rgba(0,0,0,0) 69.5%,
+      rgba(0,0,0,1) 70%,
+      rgba(0,0,0,0) 70.5%,
+
+      rgba(0,0,0,0) 79.5%,
+      rgba(0,0,0,1) 80%,
+      rgba(0,0,0,0) 80.5%,
+
+      rgba(0,0,0,0) 89.5%,
+      rgba(0,0,0,1) 90%,
+      rgba(0,0,0,0) 90.5%,
+
+      rgba(0,0,0,0) 99.5%,
+      rgba(0,0,0,1) 100%);
+  width: calc(100% - 6px);
+  height: calc(100% - 6px);
+}
+
+.progressBar {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
