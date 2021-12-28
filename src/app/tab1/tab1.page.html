@@ -15,17 +15,32 @@
       </progress>
       <div class="barOverlay"></div>
     </div>
-    <div>
 
-      <button type="button" (click)="smiteDragonClick()">Click Me!</button>
-      <button type="button" (click)="beginGameClick()">Begin game</button>
-      <button type="button" (click)="endGameClick()">End game</button>
-    </div>
-    <div>
-      Time till death: {{timeTillDeath}}
+    <!-- TODO: fix style buttons-->
+    <div fxLayout="column" style="border: solid; border-color:greenyellow; height: 40%; width: 220px;">
+      <button
+        style="border-radius: 20%; background-image: url(../../assets/icon/ss_smite_256.png); background-size: contain; background-repeat: no-repeat; height: 200px; width: 200px;" 
+        type="button" 
+        (click)="smiteDragonClick()"></button>
+      <button 
+        style="background: lightgreen; height: 20%; width: 200px;" 
+        type="button" 
+        (click)="beginGameClick()">Begin game</button>
+      <button 
+        style="background: red; height: 20%; width: 200px;" 
+        type="button" 
+        (click)="endGameClick()">End game</button>
     </div>
     <div *ngIf="startTimer > 0">
       {{startTimer}}
+    </div>
+    <!-- Winning text -->
+    <div [hidden]="!endgameWon">
+      {{winningText}}
+    </div>
+    <!-- Lossing text -->
+    <div [hidden]="!endgameLoss">
+      {{losingText}}
     </div>
   </div>
 </ion-content>

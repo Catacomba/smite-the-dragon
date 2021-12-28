@@ -1,5 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
+import { iif, Subject } from 'rxjs';
 import { DamageConfiguration } from "f:/_git-repos/Smite me/smite-the-dragon/src/app/tab1/DamageConfiguration"
+
+enum Smited {
+  byNoone,
+  byPlayer,
+  byEnemy
+}
 
 @Component({
   selector: 'app-tab1',
@@ -72,16 +79,39 @@ export class TabPractice {
 
   firstConstantDamageInterval: boolean = true;
   firstRandomDamageInterval: boolean = true;
-  constructor() {
+  
+  winningText: string = "winner";
+  losingText: string = "losser";
 
-  }
+  endgameWon: boolean = false;
+  endgameLoss: boolean = false;
+
+  stealerName: string = "Lee Sin";
+  enemyReactionTime: number = 500; //in miliseconds
+  
+  smiteReactionStartTime: number = 0;
+  mySmiteTime: number = 0;
+  enemySmiteTime: number = 0;
+
+  competitionStarted:boolean = false;
+
+
+  constructor() {}
+
+  @HostListener('document:keypress', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+      let x = event.key;
+      if (x === 'f' || x === 'd') {
+        this.smiteDragonClick();
+      }
+  }   
 
   engageStart(){
     this.gameRunning = true;
-    this.startTimer = 3;
-    this.resetDragonHealth();
+    this.resetGame();
     var i = setInterval(() => {
-      if(this.startTimer <= 1){
+      //Starts interval for countdown, when countdown is completed, the game damage loop starts and countdown interval is canceled
+      if(this.startTimer <= 0){
         clearInterval(i);
         this.damageOngoing = true;
         this.initiateDragonDamageLoop();
@@ -132,6 +162,8 @@ export class TabPractice {
     if (this.damageOngoing) {
       if(!this.firstRandomDamageInterval){
         this.damageDragon(this.getRandomNumberBetween(damageMin, damageMax));
+      }
+      else{
         this.firstRandomDamageInterval = !this.firstRandomDamageInterval;
       }
      
@@ -151,7 +183,6 @@ export class TabPractice {
   }
 
   beginGameClick() {
-
     if(this.gameRunning)
     {
       this.endGame();
@@ -177,23 +208,41 @@ export class TabPractice {
     this.timeouts.forEach(timeout => {
       clearTimeout(timeout);
     });
-    this.resetFirstInterval();
   }
 
-  resetFirstInterval(){
-    this.firstConstantDamageInterval = true;
-    this.firstRandomDamageInterval = true;
-  }
+
 
   wonGame(){
+    if(this.endgameLoss || this.endgameWon)
+    {
+      return;
+    }
+    this.endgameWon = true;
+    var winTime = ((this.mySmiteTime - this.smiteReactionStartTime) / 1000).toFixed(3) ;
+    this.winningText = "You won by smiting the dragon in " + winTime + " seconds."
+
     console.log("Won");
     this.endGame();
   }
 
   lostGame(){
+    if(this.endgameLoss || this.endgameWon)
+    {
+      return;
+    }
+    this.endgameLoss = true;
+    if(this.dragonCurrentHealth > this.smiteDamage){
+      this.losingText = "Whoah there buddy too fast!";
+    }
+    else {
+      var lossTime = ((this.enemySmiteTime - this.smiteReactionStartTime) / 1000).toFixed(3) ;
+      this.losingText = this.stealerName +  " stole dragon in " + lossTime + " seconds... you gota be faster!";
+    }
     console.log("Lost");
     this.endGame();
   }
+
+
 
   endGameClick() {
     console.log("Entering endGame()")
@@ -208,36 +257,94 @@ export class TabPractice {
   }
 
   //All damage to dragon should be done via this function
-  damageDragon(damage: number, smited: boolean = false) {
-    if(smited){
-      if(this.dragonCurrentHealth - damage <= 0){
-        this.wonGame();
-      }
-      else if(this.dragonCurrentHealth - damage > 0){
+  damageDragon(damage: number, smited: Smited = Smited.byNoone) {
+    switch(smited){
+      //no smite, just normal damage
+      case Smited.byNoone:
+        if(this.dragonCurrentHealth - damage > 0){
+          this.dragonCurrentHealth -= damage;
+          if(this.dragonCurrentHealth <= this.smiteDamage){
+            this.beginCompetition();
+          }
+        }
+        else if(this.dragonCurrentHealth - damage <= 0){
+          this.dragonCurrentHealth = 0;
+          this.lostGame();
+          this.endGameClick();
+          return;
+        }
+        break;
+      //Smited by player
+      case Smited.byPlayer:
+        if(this.dragonCurrentHealth - damage <= 0){
+          this.mySmiteTime = performance.now();
+          this.wonGame();
+          return;
+        }
+        else if(this.dragonCurrentHealth - damage > 0){
+          this.lostGame();
+          return;
+        }
+        break;
+      //Enemy smited
+      case Smited.byEnemy:
+        this.enemySmiteTime = performance.now();
         this.lostGame();
-      }
+        break;
     }
-    else{
-      if(this.dragonCurrentHealth - damage > 0){
-        this.dragonCurrentHealth -= damage;
-      }
-      else if(this.dragonCurrentHealth - damage <= 0){
-        this.dragonCurrentHealth = 0;
-        this.lostGame();
-        this.endGameClick();
-      }
+  }
+
+  beginCompetition(){
+    if(!this.competitionStarted){
+      this.competitionStarted = true;
+      this.smiteReactionStartTime = performance.now();
+      this.startEnemySmiteReaction();
     }
+  }
+
+  startEnemySmiteReaction(){
+    setTimeout(() => {
+      this.damageDragon(this.smiteDamage, Smited.byEnemy); //enemy smited
+      this.lostGame();
+    }, this.enemyReactionTime);
   }
 
   smiteDragonClick() {
     console.log("Button clicked");
-    this.damageDragon(this.smiteDamage, true);
+    this.damageDragon(this.smiteDamage, Smited.byPlayer); //You smited
+  }
+
+
+
+  resetGame(){
+    this.resetDragonHealth();
+    this.resetCompetition();
+    this.resetEndgameText();
+    this.resetFirstInterval();
+    this.resetTimer();
+  }
+
+  resetCompetition(){
+    this.competitionStarted = false;
   }
 
   resetDragonHealth() {
     this.dragonCurrentHealth = this.dragonMaxHealth;
   }
 
+  resetEndgameText(){
+    this.endgameWon = false;
+    this.endgameLoss = false;
+  }
+
+  resetFirstInterval(){
+    this.firstConstantDamageInterval = true;
+    this.firstRandomDamageInterval = true;
+  }
+
+  resetTimer(){
+    this.startTimer = 3;
+  }
 
   getRandomNumberBetween(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
