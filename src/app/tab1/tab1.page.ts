@@ -86,7 +86,17 @@ export class TabPractice {
   endgameWon: boolean = false;
   endgameLoss: boolean = false;
 
-  stealerName: string = "Lee Sin";
+  stealerName: string[] = 
+  [
+    "Shaco", "Graves", "Viego", "Amumu", "Master Yi", "Nunu", 
+    "Rammus", "Trundle", "Vi", "Warwick", "Xin Zhao", "Zac", 
+    "Ekko", "Kha’Zix", , "Lillia", "Fiddlesticks", , "Kayn", 
+    "Poppy", "Hecarim", "Sejuani", "Shyvana", "Volibear", 
+    "Elise", "Kindred", "Ivern", "Rek’Sai", "Talon", "Mordekaiser", 
+    "Udyr", "Dr. Mundo", "Jarvan IV", "Jax", "Nocturne", "Skarner"
+  ];
+
+
   enemyReactionTime: number = 500; //in miliseconds
   
   smiteReactionStartTime: number = 0;
@@ -107,7 +117,6 @@ export class TabPractice {
   }   
 
   engageStart(){
-    this.gameRunning = true;
     this.resetGame();
     var i = setInterval(() => {
       //Starts interval for countdown, when countdown is completed, the game damage loop starts and countdown interval is canceled
@@ -121,6 +130,7 @@ export class TabPractice {
   }
 
   initiateDragonDamageLoop() {
+    this.gameRunning = true;
     if (this.doConstantIntervalDamage)
       this.initiateConstantIntervalDamage();
     if (this.doRandomIntervalDamage)
@@ -219,7 +229,10 @@ export class TabPractice {
     }
     this.endgameWon = true;
     var winTime = ((this.mySmiteTime - this.smiteReactionStartTime) / 1000).toFixed(3) ;
+
     this.winningText = "You won by smiting the dragon in " + winTime + " seconds."
+    
+    this.playVictory();
 
     console.log("Won");
     this.endGame();
@@ -233,23 +246,30 @@ export class TabPractice {
     this.endgameLoss = true;
     if(this.dragonCurrentHealth > this.smiteDamage){
       this.losingText = "Whoah there buddy too fast!";
+      this.playDefeat();
     }
     else {
-      var lossTime = ((this.enemySmiteTime - this.smiteReactionStartTime) / 1000).toFixed(3) ;
-      this.losingText = this.stealerName +  " stole dragon in " + lossTime + " seconds... you gota be faster!";
+      var lossTime = ((this.enemySmiteTime - this.smiteReactionStartTime) / 1000).toFixed(3);
+      this.losingText = this.stealerName[Math.floor(Math.random() * this.stealerName.length)] +  " stole dragon, you gota be faster!";
+      this.playDefeat();
     }
     console.log("Lost");
     this.endGame();
   }
 
+  playVictory(){
+    var audio = new Audio('../../assets/sounds/Victory.mp3');
+    audio.play();
+  }
 
+  playDefeat(){
+    var audio = new Audio('../../assets/sounds/Defeat.mp3');
+    audio.play();
+  }
 
   endGameClick() {
     console.log("Entering endGame()")
-
     this.endGame();
-    
-
     this.endTime = performance.now()
     this.timeTillDeath = this.endTime - this.startTime;
     console.log("Leaving endGame()")

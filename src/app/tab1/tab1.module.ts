@@ -6,6 +6,7 @@ import { TabPractice } from './tab1.page';
 
 import { TabPracticeRoutingModule } from './tab1-routing.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     CommonModule,
     FormsModule,
     TabPracticeRoutingModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatButtonModule
   ],
   declarations: [TabPractice]
 })

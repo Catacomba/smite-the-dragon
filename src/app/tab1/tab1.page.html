@@ -1,13 +1,14 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Smite the dragon, do it!!
+      Smite the dragon! Do it!!
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div style="height: 100%;" fxLayout="column" fxLayoutAlign="center center">
+
     <!-- Dragon health bar -->
     <p>{{dragonCurrentHealth}}</p>
     <div class="healthbar-border-wrap">
@@ -16,21 +17,6 @@
       <div class="barOverlay"></div>
     </div>
 
-    <!-- TODO: fix style buttons-->
-    <div fxLayout="column" style="border: solid; border-color:greenyellow; height: 40%; width: 220px;">
-      <button
-        style="border-radius: 20%; background-image: url(../../assets/icon/ss_smite_256.png); background-size: contain; background-repeat: no-repeat; height: 200px; width: 200px;" 
-        type="button" 
-        (click)="smiteDragonClick()"></button>
-      <button 
-        style="background: lightgreen; height: 20%; width: 200px;" 
-        type="button" 
-        (click)="beginGameClick()">Begin game</button>
-      <button 
-        style="background: red; height: 20%; width: 200px;" 
-        type="button" 
-        (click)="endGameClick()">End game</button>
-    </div>
     <div *ngIf="startTimer > 0">
       {{startTimer}}
     </div>
@@ -41,6 +27,28 @@
     <!-- Lossing text -->
     <div [hidden]="!endgameLoss">
       {{losingText}}
+    </div>
+
+    <div class="cls_buttonContainer" fxLayout="column" fxLayoutAlign="space-around center" >
+      <div class="container">
+        <input
+        [disabled]="!gameRunning"
+        class="cls_smiteButton"
+        type="image"
+        src="../../assets/icon/ss_smite_256.png"
+        (click)="smiteDragonClick()"/>
+        <div class="txt_align_bottomRight">{{smiteDamage}}</div>
+        <div [hidden]="gameRunning" class="smiteDisabledOverlay"></div>
+      </div>
+
+      <button mat-fab color="primary"
+        class="cls_startButton"
+        type="button" 
+        (click)="beginGameClick()">Start</button>
+      <button mat-fab color="accent"
+        class="cls_endButton" 
+        type="button" 
+        (click)="endGameClick()">End</button>
     </div>
   </div>
 </ion-content>

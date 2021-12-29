@@ -8,6 +8,64 @@ progress::-moz-progress-bar {
   //box-shadow: 0 2px 5px grey inset;
 }
 
+.container {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+/* Bottom right text */
+.txt_align_bottomRight {
+  font-size: 25px;
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+}
+
+.cls_buttonContainer{
+   
+  border-color:greenyellow;
+}
+
+.smiteDisabledOverlay{
+  position: absolute;
+  top: 30px;
+  bottom: 0px;
+  right: 0px;
+  background-color: rgba(0,0,0,0.5);
+  height: calc(100%-30px);
+  width: 100%;
+}
+
+.cls_smiteButton
+{
+  
+  margin-top: 30px;
+  background-size: contain; 
+  background-repeat: no-repeat; 
+  height: 150px; 
+  width: 150px;
+}
+
+.cls_startButton{
+  font-size: 25px;
+  margin-top: 50px;
+  border-radius: 100%;
+  background: darkgreen; 
+  height: 75px; 
+  width: 75px;
+}
+
+.cls_endButton
+{
+  font-size: 25px;
+  margin-top: 50px;
+  background: darkred; 
+  border-radius: 100%;
+  height: 75px; 
+  width: 75px;
+}
+
 progress::-webkit-progress-value { 
   -webkit-appearance: none;
   
